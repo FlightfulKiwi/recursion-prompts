@@ -210,6 +210,13 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+    if (str1 === '' && str2 === '') { return true; }
+
+    if (str1[0] === str2[0]) {
+        return compareStr(str1.slice(1), str2.slice(1));
+    } else {
+        return false;
+    }
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
@@ -251,6 +258,24 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+    function isObject(objValue) {
+        return objValue && typeof(objValue) === 'object' && objValue.constructor === Object;
+    }
+
+    var result = 0;
+
+    if (obj[key] !== undefined) {
+        result += 1;
+    }
+
+    for (var currentKey in obj) {
+        var currentValue = obj[currentKey];
+        if (isObject(currentValue)) {
+            result += countKeysInObj(currentValue, key);
+        }
+    }
+
+    return result;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -258,11 +283,47 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+    function isObject(objValue) {
+        return objValue && typeof(objValue) === 'object' && objValue.constructor === Object;
+    }
+
+    var result = 0;
+
+    if (!isObject(obj))
+        if (obj === value) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    for (var key in obj) {
+        result += countValuesInObj(obj[key], value);
+    }
+
+    return result;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+    function isObject(objValue) {
+        return objValue && typeof(objValue) === 'object' && objValue.constructor === Object;
+    }
+
+    // Replace oldKey with newKey for non-nested key-value pairs
+    if (obj[oldKey] !== undefined) {
+        obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+    }
+
+    for (var currentKey in obj) {
+        var currentValue = obj[currentKey];
+        if (isObject(currentValue)) {
+            replaceKeysInObj(currentValue, oldKey, newKey);
+        }
+    }
+
+    return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
@@ -271,6 +332,15 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
 var fibonacci = function(n) {
+    if (n <= 0) {
+        return null;
+    }
+
+    if (n === 1) {
+        return [0, 1];
+    }
+
+
 };
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
